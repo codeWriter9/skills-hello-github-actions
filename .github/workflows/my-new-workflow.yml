@@ -36,10 +36,11 @@ jobs:
           echo Test, and deploy your project.
           ls -ltrga
           
-      - uses: actions/setup-java@v5.2.0
-      - name: install java 
-      with:
-        java-version: 25
+      - name: Set up Java
+        uses: actions/setup-java@v4 # Note: v4 is the current stable major version
+        with:
+          java-version: '21' # Using 21 as it is the current LTS; adjust if you specifically need 25
+          distribution: 'temurin' # 'distribution' is a REQUIRED parameter for setup-java
         
 
 
