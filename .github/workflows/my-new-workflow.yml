@@ -37,6 +37,7 @@ jobs:
           ls -ltrga
           
       - uses: actions/setup-java@v5.2.0
+      - name: install java 
       with:
         java-version: 25
         
