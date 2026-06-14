@@ -35,8 +35,11 @@ jobs:
           echo Add other actions to Build,
           echo Test, and deploy your project.
           ls -ltrga
-
-
+          
+      - uses: actions/setup-java@v5.2.0
+      with:
+        java-version: 25
+        
 
 
 
