@@ -41,6 +41,9 @@ jobs:
         with:
           java-version: '25' # Using 21 as it is the current LTS; adjust if you specifically need 25
           distribution: 'temurin' # 'distribution' is a REQUIRED parameter for setup-java
+
+     - name: Build and Test with Maven
+       run: ./mvnw clean verify # Or 'mvn -B clean verify' if not using the wrappe
         
 
 
