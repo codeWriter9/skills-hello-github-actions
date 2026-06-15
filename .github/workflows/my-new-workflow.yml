@@ -1,5 +1,3 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
 # Controls when the workflow will run
@@ -37,14 +35,16 @@ jobs:
           ls -ltrga
           
       - name: Set up Java
-        uses: actions/setup-java@v4 # Note: v4 is the current stable major version
+        uses: actions/setup-java@v4
         with:
-          java-version: '25' # Using 21 as it is the current LTS; adjust if you specifically need 25
-          distribution: 'temurin' # 'distribution' is a REQUIRED parameter for setup-java
+          java-version: '25'
+          distribution: 'temurin'
 
-     - name: Build and Test with Maven
-       run: ./mvnw clean verify # Or 'mvn -B clean verify' if not using the wrappe
+      - name: Make maven executable 
+        run: chmod +x ./mvnw
         
+      - name: Build and Test with Maven        
+        run: ./mvnw clean verify # Aligned perfectly with 6 spaces
 
 
 
@@ -61,3 +61,6 @@ jobs:
 
 
 
+
+
+        
