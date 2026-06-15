@@ -1,4 +1,4 @@
-package kata.eight;
+package kata.zero;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.*;
