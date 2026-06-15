@@ -20,5 +20,6 @@ public class App implements CommandLineRunner
     public void run(String [] args) 
     {	   
 		System.out.println("Hello World! ");
+		log.debug( "Hello World! " );
     }
 }
