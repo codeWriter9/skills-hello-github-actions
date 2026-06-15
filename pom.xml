@@ -8,7 +8,7 @@
   <artifactId>zero</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>eight</name>
+  <name>zero</name>
   <parent>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-parent</artifactId>
