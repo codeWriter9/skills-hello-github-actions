@@ -40,11 +40,9 @@ jobs:
           java-version: '25'
           distribution: 'temurin'
 
-      - name: Make maven executable 
-        run: chmod +x ./mvnw
         
       - name: Build and Test with Maven        
-        run: ./mvnw clean verify # Aligned perfectly with 6 spaces
+        run: mvn clean install
 
 
 
