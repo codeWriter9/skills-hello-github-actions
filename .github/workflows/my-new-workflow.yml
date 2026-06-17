@@ -1,11 +1,11 @@
-name: Continous Integration
+name: Continuous Integration
 
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch  
   pull_request:
     types: [ opened ]   
-	branch: [ "main" ]
+    branches: [ "main" ] # Corrected from 'branch' to 'branches'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -38,25 +38,7 @@ jobs:
         with:
           java-version: '25'
           distribution: 'temurin'
-		  cache: 'maven' # Automatically caches ~/.m2/repository based on pom.xml hash
-																					  
+          cache: 'maven' # Cleansed indentation whitespace
 
-        
-      - name: Build and Test with Maven        																		
+      - name: Build and Test with Maven                                               
         run: mvn compile verify -T 1C -B
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
