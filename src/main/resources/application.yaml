@@ -1,0 +1,19 @@
+logging:
+    level:
+        root: INFO
+        kata.zero.*: DEBUG
+
+local:
+    server:
+        port: 8080
+
+spring:
+    jpa:
+        properties:
+            jakarta:
+                persistence:
+                    sharedCache:
+                        mode: UNSPECIFIED
+        open-in-view: false
+        hibernate:
+            ddl-auto: none
