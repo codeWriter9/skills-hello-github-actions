@@ -1,3 +1,8 @@
+								
+				   
+
+	
+	
 name: CI
 
 # Controls when the workflow will run
@@ -38,26 +43,11 @@ jobs:
         with:
           java-version: '25'
           distribution: 'temurin'
+		  cache: 'maven' # Automatically caches ~/.m2/repository based on pom.xml hash
+																					  
 
         
       - name: Build and Test with Maven        
-        run: mvn clean install
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
+																		
+        run: mvn compile verify -T 1C -B
+```
