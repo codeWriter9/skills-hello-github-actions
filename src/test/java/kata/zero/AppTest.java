@@ -1,4 +1,4 @@
-package kata.eight;
+package kata.zero;
 
 import static org.junit.Assert.assertTrue;
 
