@@ -52,7 +52,7 @@ jobs:
 
       - name: Upload Test Results
         if: always() # Ensure this step runs even if the previous step fails
-        uses: actions/upload-artifact@v4 # V3 is deprecated and hence github action failed
+        uses: actions/upload-artifact@v5 # V4 is deprecated and upgrading to v5
         with:
           name: test-reports
           path: |
