@@ -29,4 +29,6 @@ public class Employee {
     private Integer age;
     @Column
     private String email;
+    @Column
+    private Double salary;
 }
