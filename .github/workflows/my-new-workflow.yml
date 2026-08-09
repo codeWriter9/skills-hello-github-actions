@@ -2,7 +2,7 @@ name: Continuous Integration
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch  
+  # Triggers the workflow on push or pull request events but only for the "main" branch
   pull_request:
     types: [ opened, synchronize, reopened ]
     branches: [ "main" ] # Corrected from 'branch' to 'branches'
@@ -14,9 +14,15 @@ on:
 
 # Avoid redundant parallel runs on the same PR
 # Root Level Concurrency block
+# Best Practice: Restrict default GITHUB_TOKEN permissions
+permissions:
+  contents: read
+
+
+
 concurrency:
-   group: ${{ github.workflow }}-${{ github.ref }}
-   cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -48,14 +54,15 @@ jobs:
           ls -ltrga
 
       - name: Build and Test with Maven
-        run: mvn verify -T 1C -B
+        run: mvn clean verify -T 1C -B
 
       - name: Upload Test Results
         if: always() # Ensure this step runs even if the previous step fails
         uses: actions/upload-artifact@v7 # v7 runs on node 24
         with:
-          name: test-reports
+          name: test-reports-${{ github.sha }}
           path: |
-            target/surefire-reports # standard Maven test report location
-            target/failsafe-reports # standard Maven test report location
+            **/target/surefire-reports # standard Maven test report location
+            **/target/failsafe-reports # standard Maven test report location
           if-no-files-found: ignore # Please ignore if no files found ## we will check this later
+

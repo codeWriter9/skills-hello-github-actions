@@ -12,6 +12,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 @ActiveProfiles("test")
@@ -31,8 +33,8 @@ public class EmployeeTest {
     @Test
     public void testEmployee() {
         assertThat(employee).isNotNull();
-        Assertions.assertTrue(employee.getLastName().equals("Parker"));
-        Assertions.assertTrue(employee.getFirstName().equals("Peter"));
+        assertEquals("Parker", employee.getLastName());
+        assertEquals("Peter", employee.getFirstName());
     }
 
     @AfterEach
