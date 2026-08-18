@@ -1,0 +1,29 @@
+name: 'Setup Java & Maven Dependency Audit'
+description: 'Sets up JDK 25 with Maven caching and runs OWASP Dependency-Check'
+
+inputs:
+  java-version:
+    description: 'JDK Version to setup'
+    required: false
+    default: '25'
+  fail-on-error:
+    description: 'Whether OWASP check should fail the build on vulnerability discovery'
+    required: false
+    default: 'false'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up JDK
+      uses: actions/setup-java@v5
+      with:
+        java-version: ${{ inputs.java-version }}
+        distribution: 'temurin'
+        cache: 'maven'
+
+    - name: Maven Dependency Security Audit
+      shell: bash
+      run: |
+        mvn org.owasp:dependency-check-maven:check \
+          -B \
+          -DfailOnError=${{ inputs.fail-on-error }}
