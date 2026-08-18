@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.*;
  * Hello world!
  *
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = { "kata.zero.controller","kata.zero"} )
 @Slf4j
 public class App implements CommandLineRunner
 {
