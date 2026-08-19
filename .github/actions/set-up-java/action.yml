@@ -1,0 +1,20 @@
+name: 'Setup Java '
+description: 'Sets up JDK 25 with Maven caching'
+
+inputs:
+  java-version:
+    description: 'JDK Version to setup'
+    required: false
+    default: '25'
+
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up JDK
+      uses: actions/setup-java@v5
+      with:
+        java-version: ${{ inputs.java-version }}
+        distribution: 'temurin'
+        cache: 'maven'
+
