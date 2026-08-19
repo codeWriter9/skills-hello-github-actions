@@ -28,13 +28,6 @@ jobs:
             java-version: '25'
             fail-on-error: 'false'
 
-      #- name: Set up JDK 25
-      #  uses: actions/setup-java@v5
-      #  with:
-      #    java-version: '25'
-      #    distribution: 'temurin'
-      #    cache: 'maven'
-
       # OWASP Dependency-Check plugin run via Maven
       - name: Maven Dependency Security Audit
         run: mvn org.owasp:dependency-check-maven:check -B -DfailOnError=false
