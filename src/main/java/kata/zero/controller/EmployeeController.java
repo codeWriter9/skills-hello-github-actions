@@ -60,9 +60,6 @@ public class EmployeeController {
         List<Employee> employees = employeeService.findAll();
         log.info("employees = {} ",employees );
         return Utils.getInstance().getUtilsMap(employees);
-        //return employees.stream().limit(100).map(
-        //        e -> map(map(map("id", e.getId()), "name", e.getFirstName() + " " + e.getLastName()), "department", "Engineering")
-        //).collect(Collectors.toList());
     }
 
 
