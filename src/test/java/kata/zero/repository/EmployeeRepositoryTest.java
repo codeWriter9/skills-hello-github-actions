@@ -73,6 +73,21 @@ public class EmployeeRepositoryTest {
         assertEquals(6, repository.maxId(), "Expected max ID to be 6 but found different");
     }
 
+    @Test
+    public void testFindByEmail() {
+        assertEquals("spiderman@web.com", repository.findByEmail("spiderman@web.com").getEmail());
+    }
+
+    @Test
+    public void testFindByLastName() {
+        assertEquals("Parker", repository.findByLastName("Parker").get(0).getLastName());
+    }
+
+    @Test
+    public void testFindByFirstName() {
+        assertEquals("Peter", repository.findByFirstName("Peter").get(0).getFirstName());
+    }
+
     @AfterEach
     public void destroy() {
         entityManager = null;

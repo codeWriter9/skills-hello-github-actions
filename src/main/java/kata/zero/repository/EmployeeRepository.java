@@ -13,6 +13,7 @@ public interface EmployeeRepository extends CrudRepository<Employee, Integer> {
 
     List<Employee> findByAge(int age);
 
+    @Query("SELECT e FROM Employee e WHERE e.email = :email")
     Employee findByEmail(String email);
 
     List<Employee> findAll();
