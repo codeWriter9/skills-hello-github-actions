@@ -2,6 +2,7 @@ package kata.zero.controller;
 
 import kata.zero.bean.Employee;
 import kata.zero.service.EmployeeService;
+import kata.zero.util.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,7 +41,7 @@ public class EmployeeController {
 
     private static Map<String, Object> map(String key, Object value) {
         Map<String, Object> map = new HashMap<>();
-        map.put(key, value);
+            map.put(key, value);
         return map;
     }
 
@@ -58,9 +59,10 @@ public class EmployeeController {
     public List<Map<String, Object>> getEmployeeList() {
         List<Employee> employees = employeeService.findAll();
         log.info("employees = {} ",employees );
-        return employees.stream().limit(100).map(
-                e -> map(map(map("id", e.getId()), "name", e.getFirstName() + " " + e.getLastName()), "department", "Engineering")
-        ).collect(Collectors.toList());
+        return Utils.getInstance().getUtilsMap(employees);
+        //return employees.stream().limit(100).map(
+        //        e -> map(map(map("id", e.getId()), "name", e.getFirstName() + " " + e.getLastName()), "department", "Engineering")
+        //).collect(Collectors.toList());
     }
 
 
