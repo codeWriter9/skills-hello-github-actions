@@ -17,8 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @DataJpaTest
@@ -49,7 +48,7 @@ public class EmployeeRepositoryTest {
     }
 
     @Test
-    @DisplayName("Postive Test of Employee Repository")
+    @DisplayName("Positive Test of Employee Repository")
     public void testEmployee() {
         assertTrue(repository.findByLastName("Parker").contains(employee));
         log.info("employee" + employee);
@@ -60,6 +59,18 @@ public class EmployeeRepositoryTest {
     @DisplayName("Negative Test of Employee Repository")
     public void testNegative() {
         assertFalse(repository.findByLastName("Abigail").contains(employee));
+    }
+
+    @Test
+    @DisplayName("Find All")
+    public void testFindAll() {
+        assertEquals(5, repository.findAll().size(), "Expected size of all to be 1 but found different ");
+    }
+
+    @Test
+    @DisplayName("Max ID")
+    public void testMaxId() {
+        assertEquals(6, repository.maxId(), "Expected max ID to be 6 but found different");
     }
 
     @AfterEach

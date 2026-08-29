@@ -31,4 +31,11 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
+    public void insert(Employee employee) {
+        log.info("Inserting employee: {}", employee);
+        employeeRepository.save(employee);
+    }
+
+    public Integer maxId() { return  employeeRepository.maxId(); }
+
 }

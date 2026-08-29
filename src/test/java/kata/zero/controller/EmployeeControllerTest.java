@@ -9,6 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.web.servlet.client.RestTestClient;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Slf4j
@@ -59,6 +61,20 @@ public class EmployeeControllerTest {
                 .value(body -> {
                     log.info("Response body: {}", body);
                     Assertions.assertEquals("hello", body);
+                });
+    }
+
+    @Test
+    public void smokeTest4() {
+        restTestClient.get()
+                .uri("/employee/list/all")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(List.class)
+                .value(body -> {
+                    log.info("Response body: {}", body);
+                    Assertions.assertNotNull(body);
+                    Assertions.assertEquals(5, body.size());
                 });
     }
 }

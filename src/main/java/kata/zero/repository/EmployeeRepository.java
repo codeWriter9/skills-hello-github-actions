@@ -1,6 +1,7 @@
 package kata.zero.repository;
 
 import kata.zero.bean.Employee;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,4 +17,7 @@ public interface EmployeeRepository extends CrudRepository<Employee, Integer> {
 
     List<Employee> findAll();
     List<Employee> findByFirstName(String firstName);
+
+    @Query("SELECT MAX(e.id) FROM Employee e")
+    Integer maxId();
 }
