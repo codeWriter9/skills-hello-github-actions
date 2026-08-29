@@ -15,6 +15,10 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    public List<Employee> findByFirstName(String firstName) {
+        return employeeRepository.findByFirstName(firstName);
+    }
+
     public List<Employee> findByLastName(String lastName) {
         return employeeRepository.findByLastName(lastName);
     }
