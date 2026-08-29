@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -67,26 +66,12 @@ public class EmployeeController {
     // NEW: POST endpoint to handle adding new employees
     @PostMapping("/add")
     public ResponseEntity<Map<String, Object>> addEmployee(@RequestBody Map<String, Object> payload) {
-
-        Map<String, Object> newEmployee = Map.of(
-                "id", employeeService.maxId() + 1,
-                "firstName", payload.get("firstName"),
-                "lastName", payload.get("lastName"),
-                "age", payload.get("age"),
-                "email", payload.get("email"),
-                "department", payload.get("department")
-        );
-        log.info("Adding new employee: {}", newEmployee);
-        Employee employee = new Employee();
-        employee.setId((Integer) newEmployee.get("id"));
-        employee.setFirstName((String) newEmployee.get("firstName"));
-        employee.setLastName((String) newEmployee.get("lastName"));
-        employee.setAge(Integer.parseInt((String) newEmployee.get("age")));
-        employee.setEmail((String) newEmployee.get("email"));
+        payload.put("id", employeeService.maxId() + 1);
+        Employee employee = Utils.getInstance().buildEmployee(payload);
         log.info("Adding new employee: {}", employee);
         employeeService.insert(employee);
         // Return 201 Created status with the newly added object payload
-        return ResponseEntity.status(HttpStatus.CREATED).body(newEmployee);
+        return ResponseEntity.status(HttpStatus.CREATED).body(payload);
     }
 
 }

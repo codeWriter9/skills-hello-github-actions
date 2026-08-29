@@ -35,6 +35,16 @@ public class Utils {
         else return null;
     }
 
+    public Employee buildEmployee(Map<String, Object> newEmployee) {
+        Employee employee = new Employee();
+        employee.setId((Integer) newEmployee.get("id"));
+        employee.setFirstName((String) newEmployee.get("firstName"));
+        employee.setLastName((String) newEmployee.get("lastName"));
+        employee.setAge(Integer.parseInt((String) newEmployee.get("age")));
+        employee.setEmail((String) newEmployee.get("email"));
+        return employee;
+    }
+
     private Utils add(Map<String, Object> map, String key, Object value) {
         if(map == null) map = new HashMap<>();
         map.put(key, value);
