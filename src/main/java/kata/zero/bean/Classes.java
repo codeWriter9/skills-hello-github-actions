@@ -8,13 +8,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.extern.slf4j.*;
 
 
 @Entity
-@Getter @Setter @ToString @NoArgsConstructor @EqualsAndHashCode(callSuper=false)
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 @Table(name = "classes")
-@Slf4j
 public class Classes {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)

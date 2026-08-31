@@ -9,14 +9,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.extern.slf4j.*;
 
 
 
 @Entity
 @Table(name = "courses")
 @Getter @Setter @ToString @NoArgsConstructor @EqualsAndHashCode(callSuper=false)
-@Slf4j
 public class Course {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)

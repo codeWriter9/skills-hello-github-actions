@@ -12,7 +12,6 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Getter @Setter @ToString @NoArgsConstructor @EqualsAndHashCode(callSuper=false)
 @Table(name = "gpa_scale")
-@Slf4j
 public class GpaScale {
 
     @Id 
