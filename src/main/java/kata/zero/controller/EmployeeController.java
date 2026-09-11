@@ -71,6 +71,7 @@ public class EmployeeController {
         log.info("Adding new employee: {}", employee);
         employeeService.insert(employee);
         // Return 201 Created status with the newly added object payload
+        log.info("Returning the payload: {}", payload);
         return ResponseEntity.status(HttpStatus.CREATED).body(payload);
     }
 
