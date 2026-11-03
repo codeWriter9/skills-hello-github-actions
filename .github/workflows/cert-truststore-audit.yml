@@ -1,0 +1,118 @@
+name: Certificate Generation & Truststore Expiry Audit
+
+on:
+  push:
+    branches: [ "main" ]
+  schedule:
+    # Weekly audit on Mondays at 06:00 UTC    
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+    inputs:
+      expiry_threshold_days:
+        description: 'Days before expiration to trigger audit failure'
+        required: false
+        default: '30'
+
+permissions:
+  contents: read
+
+jobs:
+  cert-audit-pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 21 (For keytool CLI)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Generate X.509 Certificate & PKCS12 Truststore
+        shell: bash
+        run: |
+          mkdir -p security-artifacts
+          cd security-artifacts
+
+          # 1. Generate RSA private key and self-signed certificate (valid for 60 days)
+          openssl req -x509 -newkey rsa:4096 -nodes \
+            -keyout app-server.key \
+            -out app-server.crt \
+            -days 60 \
+            -subj "/CN=internal-banking-api.local/OU=CyberHygiene/O=Enterprise/C=IN"
+
+          # 2. Import certificate into a PKCS12 Truststore using Java keytool
+          keytool -importcert -noprompt \
+            -alias internal-root-ca \
+            -file app-server.crt \
+            -keystore internal-truststore.p12 \
+            -storetype PKCS12 \
+            -storepass "ChangeIt123!"
+
+          echo "PKCS12 Truststore generated successfully."
+          ls -lh internal-truststore.p12 app-server.crt
+
+      - name: Audit Truststore & Certificate Expiration
+        shell: bash
+        env:
+          THRESHOLD_DAYS: ${{ github.event.inputs.expiry_threshold_days || '30' }}
+          TRUSTSTORE_PASS: "ChangeIt123!"
+        run: |
+          cd security-artifacts
+          TARGET_STORE="internal-truststore.p12"
+          
+          echo "=== OPERATIONAL TRUSTSTORE EXPIRY SCANNER ==="
+          echo "Target Store: ${TARGET_STORE}"
+          echo "Expiry Warning Window: ${THRESHOLD_DAYS} days"
+          echo "--------------------------------------------"
+
+          NOW_EPOCH=$(date +%s)
+          WARN_WINDOW_SEC=$(( THRESHOLD_DAYS * 86400 ))
+          FAIL_TRIGGER=0
+
+          # Corrected Keytool Command: -storetype instead of -type
+          ALIASES=$(keytool -list -keystore "${TARGET_STORE}" -storepass "${TRUSTSTORE_PASS}" -storetype PKCS12 | grep "PrivateKeyEntry\|trustedCertEntry" | awk -F',' '{print $1}')
+          
+          for ALIAS in ${ALIASES}; do
+          [ -z "${ALIAS}" ] && continue
+          
+          # Export PEM cert for specific alias to parse via OpenSSL
+          keytool -exportcert -alias "${ALIAS}" -keystore "${TARGET_STORE}" -storepass "${TRUSTSTORE_PASS}" -storetype PKCS12 -rfc > temp_alias.pem 2>/dev/null
+          
+          # Parse expiry date string and convert to epoch
+          EXPIRY_DATE=$(openssl x509 -enddate -noout -in temp_alias.pem | cut -d= -f2)
+          EXPIRY_EPOCH=$(date -d "${EXPIRY_DATE}" +%s 2>/dev/null || date -j -f "%b %d %T %Y %Z" "${EXPIRY_DATE}" +%s)
+          
+          DIFF_SEC=$(( EXPIRY_EPOCH - NOW_EPOCH ))
+          DAYS_LEFT=$(( DIFF_SEC / 86400 ))
+          
+          echo "Alias: [${ALIAS}] | Expires: [${EXPIRY_DATE}] | Days Remaining: ${DAYS_LEFT}d"
+          
+          if [ "${DIFF_SEC}" -lt 0 ]; then
+              echo "[CRITICAL ERROR] Alias '${ALIAS}' HAS EXPIRED!"
+              FAIL_TRIGGER=1
+          elif [ "${DIFF_SEC}" -lt "${WARN_WINDOW_SEC}" ]; then
+              echo "[WARNING] Alias '${ALIAS}' expires within boundary threshold (${DAYS_LEFT} days left < ${THRESHOLD_DAYS}d threshold)."
+              FAIL_TRIGGER=1
+          else
+              echo "[OK] Alias '${ALIAS}' certificate boundary compliant."
+          fi
+          
+          rm -f temp_alias.pem
+          done
+
+          echo "--------------------------------------------"
+          if [ "${FAIL_TRIGGER}" -eq 1 ]; then
+            echo "[PIPELINE FAILURE] One or more truststore certificates failed expiration audit."
+            exit 1
+          fi
+          echo "[CLEAN] All truststore entries pass compliance threshold."
+
+      - name: Secure Cleanup of Sensitive Key Material
+        if: always()
+        shell: bash
+        run: |
+          rm -rf security-artifacts/*.key security-artifacts/*.p12
+          echo "Private key and truststore material purged from execution runner."
